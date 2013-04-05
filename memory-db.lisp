@@ -7,5 +7,13 @@
 (defmethod db-get-user (id (db memory-db))
   (gethash id (users db)))
 
+(defmethod db-update-user (id password ))
+
 (defmethod db-add-user ((user user) (db memory-db))
-  (setf (gethash (id user) (users db)) user))
+  (restart-case
+      (if (gethash (id user) (users db))
+          (error 'user-already-exists :id (id user))
+          (setf (gethash (id user) (users db)) user))
+    (overwrite-user ()
+      (setf (gethash (id user) (users db)) user))))
+

@@ -6,4 +6,5 @@
    :*user-db*
    :*hasher*
    :*checker*
-   :memory-db))
+   :memory-db
+   :update-password))

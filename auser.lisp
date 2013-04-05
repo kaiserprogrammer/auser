@@ -19,6 +19,11 @@
      (ironclad:ascii-string-to-byte-array password)
      hash)))
 
+(define-condition user-already-exists (error)
+  ((id :accessor id :initarg :id))
+  (:report (lambda (c s)
+             (format s "USER with id ~s already exists." (id c)))))
+
 (defmethod (setf password) (pw (user user))
   (setf (slot-value user 'password) (funcall *hasher* pw)))
 
@@ -35,3 +40,5 @@
 (defun verify-user (id password &optional (db *user-db*))
   (funcall *checker* (password (db-get-user id db)) password))
 
+(defun update-password (id password &optional (db *user-db*))
+  (setf (password (db-get-user id db)) password))
