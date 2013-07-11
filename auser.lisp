@@ -24,6 +24,11 @@
   (:report (lambda (c s)
              (format s "USER with id ~s already exists." (id c)))))
 
+(define-condition user-does-not-exist (error)
+  ((id :accessor id :initarg :id))
+  (:report (lambda (c s)
+             (format s "NO USER with id ~s exists." (id c)))))
+
 (defmethod (setf password) (pw (user user))
   (setf (slot-value user 'password) (funcall *hasher* pw)))
 

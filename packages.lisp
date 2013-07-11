@@ -7,4 +7,6 @@
    :*hasher*
    :*checker*
    :memory-db
-   :update-password))
+   :update-password
+   :user-does-not-exist
+   :user-already-exists))

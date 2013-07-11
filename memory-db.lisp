@@ -5,9 +5,10 @@
           :accessor users)))
 
 (defmethod db-get-user (id (db memory-db))
-  (gethash id (users db)))
-
-(defmethod db-update-user (id password ))
+  (let ((user (gethash id (users db))))
+    (if user
+        user
+        (error 'user-does-not-exist :id id))))
 
 (defmethod db-add-user ((user user) (db memory-db))
   (restart-case

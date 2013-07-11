@@ -34,7 +34,9 @@
     (assert-true (verify-user "blub" "new_password"))
     (assert-false (verify-user "blub" "wrong"))))
 
-(define-test not-existing-user)
+(define-test not-existing-user
+  (with-setup
+    (assert-error 'user-does-not-exist (verify-user "not existing" "secret"))))
 
 
 (let ((*print-failures* t)
