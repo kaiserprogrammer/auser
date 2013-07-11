@@ -7,33 +7,37 @@
 
 (defvar *tested-db*)
 
-(dolist (*tested-db* '(memory-db))
-  (define-test adding-a-user
-    (let ((*user-db* (make-instance *tested-db*)))
-      (add-user "blub" "secret")
-      (let ((user (auser::db-get-user "blub" *user-db*)))
-        (assert-false (null user))
-        (assert-true (string= "blub" (auser::id user)))
-        (assert-false (string= "secret" (auser::password user))))))
+(defmacro with-setup (&body body)
+  `(let ((*user-db* (make-instance *tested-db*)))
+     (add-user "blub" "secret")
+     ,@body))
 
-  (define-test verifying-password
-    (let ((*user-db* (make-instance *tested-db*)))
-      (add-user "blub" "secret")
-      (assert-true (verify-user "blub" "secret"))
-      (assert-false (verify-user "blub" "wrong"))))
+(define-test adding-a-user
+  (with-setup
+    (let ((user (auser::db-get-user "blub" *user-db*)))
+      (assert-false (null user))
+      (assert-true (string= "blub" (auser::id user)))
+      (assert-false (string= "secret" (auser::password user))))))
 
-  (define-test no-overwriting-of-user
-    (let ((*user-db* (make-instance *tested-db*)))
-      (add-user "blub" "secret")
-      (assert-error 'auser::user-already-exists (add-user "blub" "secret"))))
+(define-test verifying-password
+  (with-setup
+    (assert-true (verify-user "blub" "secret"))
+    (assert-false (verify-user "blub" "wrong"))))
 
-  (define-test updating-password
-    (let ((*user-db* (make-instance *tested-db*)))
-      (add-user "blub" "wrong")
-      (update-password "blub" "secret")
-      (assert-true (verify-user "blub" "secret")))))
+(define-test no-overwriting-of-user
+  (with-setup
+    (assert-error 'auser::user-already-exists (add-user "blub" "secret"))))
+
+(define-test updating-password
+  (with-setup
+    (update-password "blub" "new_password")
+    (assert-true (verify-user "blub" "new_password"))
+    (assert-false (verify-user "blub" "wrong"))))
+
+(define-test not-existing-user)
 
 
 (let ((*print-failures* t)
       (*print-errors* t))
-  (run-tests :all))
+  (dolist (*tested-db* '(memory-db))
+    (run-tests :all)))
