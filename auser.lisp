@@ -29,6 +29,12 @@
   (:report (lambda (c s)
              (format s "NO USER with id ~s exists." (id c)))))
 
+(define-condition invalid-password (error)
+  ((id :accessor id :initarg :id)
+   (invalid-password :accessor password :initarg :invalid-password))
+  (:report (lambda (c s)
+             (format s "USER with id ~s does not have password ~s." (id c) (password c)))))
+
 (defmethod (setf password) (pw (user user))
   (setf (slot-value user 'password) (funcall *hasher* pw)))
 
@@ -43,7 +49,9 @@
     (db-add-user user db)))
 
 (defun verify-user (id password &optional (db *user-db*))
-  (funcall *checker* (password (db-get-user id db)) password))
+  (if (funcall *checker* (password (db-get-user id db)) password)
+      t
+      (error 'invalid-password :invalid-password password :id id)))
 
 (defun update-password (id password &optional (db *user-db*))
   (setf (password (db-get-user id db)) password))

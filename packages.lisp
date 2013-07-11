@@ -9,4 +9,5 @@
    :memory-db
    :update-password
    :user-does-not-exist
-   :user-already-exists))
+   :user-already-exists
+   :invalid-password))
