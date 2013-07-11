@@ -24,6 +24,10 @@
     (assert-true (verify-user "blub" "secret"))
     (assert-error 'invalid-password (verify-user "blub" "wrong"))))
 
+(define-test no-password
+  (with-setup
+    (assert-error 'invalid-password (verify-user "blub" ""))))
+
 (define-test no-overwriting-of-user
   (with-setup
     (assert-error 'auser::user-already-exists (add-user "blub" "secret"))))
