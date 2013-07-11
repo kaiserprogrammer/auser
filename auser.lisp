@@ -8,16 +8,23 @@
    (password :initarg :password
              :reader password)))
 
+(defun blank? (text)
+  (not (and text (> (length text) 0))))
+
 (defparameter *hasher*
   (lambda (password)
-    (ironclad:pbkdf2-hash-password-to-combined-string
-     (ironclad:ascii-string-to-byte-array password))))
+    (if (blank? password)
+        (error 'empty-password)
+        (ironclad:pbkdf2-hash-password-to-combined-string
+         (ironclad:ascii-string-to-byte-array password)))))
 
 (defparameter *checker*
   (lambda (hash password)
-    (ironclad:pbkdf2-check-password
-     (ironclad:ascii-string-to-byte-array password)
-     hash)))
+    (if (blank? password)
+        (error 'empty-password)
+        (ironclad:pbkdf2-check-password
+         (ironclad:ascii-string-to-byte-array password)
+         hash))))
 
 (define-condition user-already-exists (error)
   ((id :accessor id :initarg :id))
@@ -35,6 +42,12 @@
   (:report (lambda (c s)
              (format s "USER with id ~s does not have password ~s." (id c) (password c)))))
 
+(define-condition empty-password (error)
+  ()
+  (:report (lambda (c s)
+             (declare (ignore c))
+             (format s "Empty Password is not allowed"))))
+
 (defmethod (setf password) (pw (user user))
   (setf (slot-value user 'password) (funcall *hasher* pw)))
 
@@ -49,8 +62,7 @@
     (db-add-user user db)))
 
 (defun verify-user (id password &optional (db *user-db*))
-  (if (and password (> (length password) 0)
-           (funcall *checker* (password (db-get-user id db)) password))
+  (if (funcall *checker* (password (db-get-user id db)) password)
       t
       (error 'invalid-password :invalid-password password :id id)))
 

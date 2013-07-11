@@ -26,7 +26,8 @@
 
 (define-test no-password
   (with-setup
-    (assert-error 'invalid-password (verify-user "blub" ""))))
+    (assert-error 'empty-password (verify-user "blub" ""))
+    (assert-error 'empty-password (add-user "empty_password_user" ""))))
 
 (define-test no-overwriting-of-user
   (with-setup
