@@ -2,6 +2,9 @@
   (:use :cl)
   (:export
    :add-user
+   :id
+   :password
+   :user
    :verify-user
    :*user-db*
    :*hasher*
