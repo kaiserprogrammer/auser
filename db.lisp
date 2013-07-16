@@ -1,4 +1,4 @@
 (in-package :auser)
 
-(defgeneric db-add-user (user db))
-(defgeneric db-get-user (id db))
+(defgeneric db-add-user (db user))
+(defgeneric db-get-user (db id))

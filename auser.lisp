@@ -59,12 +59,12 @@
   (let ((user (make-instance 'user
                              :id id
                              :password password)))
-    (db-add-user user db)))
+    (db-add-user db user)))
 
 (defun verify-user (id password &optional (db *user-db*))
-  (if (funcall *checker* (password (db-get-user id db)) password)
+  (if (funcall *checker* (password (db-get-user db id)) password)
       t
       (error 'invalid-password :invalid-password password :id id)))
 
 (defun update-password (id password &optional (db *user-db*))
-  (setf (password (db-get-user id db)) password))
+  (setf (password (db-get-user db id)) password))

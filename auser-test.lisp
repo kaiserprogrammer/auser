@@ -14,7 +14,7 @@
 
 (define-test adding-a-user
   (with-setup
-    (let ((user (auser::db-get-user "blub" *user-db*)))
+    (let ((user (auser::db-get-user *user-db* "blub")))
       (assert-false (null user))
       (assert-true (string= "blub" (auser::id user)))
       (assert-false (string= "secret" (auser::password user))))))
