@@ -21,7 +21,7 @@
 
 (define-test verifying-password
   (with-setup
-    (assert-true (verify-user "blub" "secret"))
+    (verify-user "blub" "secret")
     (assert-error 'invalid-password (verify-user "blub" "wrong"))))
 
 (define-test no-password
@@ -36,7 +36,7 @@
 (define-test updating-password
   (with-setup
     (update-password "blub" "new_password")
-    (assert-true (verify-user "blub" "new_password"))
+    (verify-user "blub" "new_password")
     (assert-error 'invalid-password (verify-user "blub" "wrong"))))
 
 (define-test not-existing-user

@@ -62,9 +62,8 @@
     (db-add-user db user)))
 
 (defun verify-user (id password &optional (db *user-db*))
-  (if (funcall *checker* (password (db-get-user db id)) password)
-      t
-      (error 'invalid-password :invalid-password password :id id)))
+  (unless (funcall *checker* (password (db-get-user db id)) password)
+    (error 'invalid-password :invalid-password password :id id)))
 
 (defun update-password (id password &optional (db *user-db*))
   (setf (password (db-get-user db id)) password))
