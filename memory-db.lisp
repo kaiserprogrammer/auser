@@ -10,11 +10,13 @@
         user
         (error 'user-does-not-exist :id id))))
 
-(defmethod db-add-user ((db memory-db) (user user))
+(defmethod db-add-user ((db memory-db) id password)
   (restart-case
-      (if (gethash (id user) (users db))
-          (error 'user-already-exists :id (id user))
-          (setf (gethash (id user) (users db)) user))
+      (if (gethash id (users db))
+          (error 'user-already-exists :id id)
+          (setf (gethash id (users db)) (list id password)))
     (overwrite-user ()
-      (setf (gethash (id user) (users db)) user))))
+      (setf (gethash id (users db)) (list id password)))))
 
+(defmethod db-update-password ((db memory-db) id password)
+  (setf (gethash id (users db)) (list id password)))

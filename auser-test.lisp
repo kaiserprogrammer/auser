@@ -16,8 +16,8 @@
   (with-setup
     (let ((user (auser::db-get-user *user-db* "blub")))
       (assert-false (null user))
-      (assert-true (string= "blub" (auser::id user)))
-      (assert-false (string= "secret" (auser::password user))))))
+      (assert-true (string= "blub" (first user)))
+      (assert-false (string= "secret" (second user))))))
 
 (define-test verifying-password
   (with-setup

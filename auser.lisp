@@ -2,12 +2,6 @@
 
 (defvar *user-db*)
 
-(defclass user ()
-  ((id :initarg :id
-       :reader id)
-   (password :initarg :password
-             :reader password)))
-
 (defun blank? (text)
   (not (and text (> (length text) 0))))
 
@@ -48,22 +42,13 @@
              (declare (ignore c))
              (format s "Empty Password is not allowed"))))
 
-(defmethod (setf password) (pw (user user))
-  (setf (slot-value user 'password) (funcall *hasher* pw)))
-
-(defmethod initialize-instance :after ((u user) &key)
-  (when (slot-boundp u 'password)
-    (setf (password u) (password u))))
-
 (defun add-user (id password &optional (db *user-db*))
-  (let ((user (make-instance 'user
-                             :id id
-                             :password password)))
-    (db-add-user db user)))
+  (db-add-user db id (funcall *hasher* password)))
 
 (defun verify-user (id password &optional (db *user-db*))
-  (unless (funcall *checker* (password (db-get-user db id)) password)
+
+  (unless (funcall *checker* (second (db-get-user db id)) password)
     (error 'invalid-password :invalid-password password :id id)))
 
 (defun update-password (id password &optional (db *user-db*))
-  (setf (password (db-get-user db id)) password))
+  (db-update-password db id (funcall *hasher* password)))
