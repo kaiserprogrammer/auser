@@ -9,5 +9,4 @@
   ;; components likely need manual reordering
   :components ((:file "packages")
                (:file "db")
-               (:file "auser")
-               (:file "memory-db")))
+               (:file "auser")))

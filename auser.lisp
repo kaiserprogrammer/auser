@@ -1,7 +1,5 @@
 (in-package :auser)
 
-(defvar *user-db*)
-
 (defun blank? (text)
   (not (and text (> (length text) 0))))
 
@@ -14,7 +12,9 @@
 
 (defparameter *checker*
   (lambda (hash password)
-    (if (blank? password)
+    (if (or (not (stringp password))
+            (blank? password)
+            (not (stringp hash)))
         (error 'empty-password)
         (ironclad:pbkdf2-check-password
          (ironclad:ascii-string-to-byte-array password)
@@ -40,14 +40,14 @@
   ()
   (:report (lambda (c s)
              (declare (ignore c))
-             (format s "Empty Password is not allowed"))))
+             (format s "An Empty Password is not allowed"))))
 
-(defun add-user (id password &optional (db *user-db*))
+(defun add-user (id password db)
   (db-add-user db id (funcall *hasher* password)))
 
-(defun verify-user (id password &optional (db *user-db*))
+(defun verify-user (id password db)
   (unless (funcall *checker* (second (db-get-user db id)) password)
     (error 'invalid-password :invalid-password password :id id)))
 
-(defun update-password (id password &optional (db *user-db*))
+(defun update-password (id password db)
   (db-update-password db id (funcall *hasher* password)))
