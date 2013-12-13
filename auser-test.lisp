@@ -7,10 +7,10 @@
 
 (defvar *test-db-creator*)
 
-(defmethod auser::db-get-user ((db hash-table) id)
+(defmethod auser::db-get-password ((db hash-table) id)
   (let ((password (gethash id db)))
     (if password
-        (list id password)
+        password
         (error 'user-does-not-exist :id id))))
 
 (defmethod auser::db-add-user ((db hash-table) id password)

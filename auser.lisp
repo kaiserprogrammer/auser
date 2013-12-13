@@ -46,7 +46,7 @@
   (db-add-user db id (funcall *hasher* password)))
 
 (defun verify-user (id password db)
-  (unless (funcall *checker* (second (db-get-user db id)) password)
+  (unless (funcall *checker* (db-get-password db id) password)
     (error 'invalid-password :invalid-password password :id id)))
 
 (defun update-password (id password db)
