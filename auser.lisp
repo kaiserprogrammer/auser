@@ -41,11 +41,11 @@
              (format s "An Empty Password is not allowed"))))
 
 (defun add (id password db)
-  (db-add db id (funcall *hasher* password)))
+  (db-add-password db id (funcall *hasher* password)))
 
 (defun verify (id password db &key (checker #'default-checker))
   (unless (funcall checker (db-get-password db id) password)
     (error 'invalid-password :invalid-password password :id id)))
 
 (defun update (id password db &key (hasher #'default-hasher))
-  (db-update db id (funcall hasher password)))
+  (db-update-password db id (funcall hasher password)))

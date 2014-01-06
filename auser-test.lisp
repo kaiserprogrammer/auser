@@ -13,7 +13,7 @@
         password
         (error 'user-does-not-exist :id id))))
 
-(defmethod auser::db-add ((db hash-table) id password)
+(defmethod auser::db-add-password ((db hash-table) id password)
   (restart-case
       (if (gethash id db)
           (error 'user-already-exists :id id)
@@ -21,7 +21,7 @@
     (overwrite-user ()
       (setf (gethash id db) password))))
 
-(defmethod auser::db-update ((db hash-table) id password)
+(defmethod auser::db-update-password ((db hash-table) id password)
   (setf (gethash id db) password))
 
 (defmacro with-setup (&body body)
