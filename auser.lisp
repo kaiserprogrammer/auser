@@ -40,8 +40,8 @@
              (declare (ignore c))
              (format s "An Empty Password is not allowed"))))
 
-(defun add (id password db)
-  (db-add-password db id (funcall *hasher* password)))
+(defun add (id password db &key (hasher #'default-hasher))
+  (db-add-password db id (funcall hasher password)))
 
 (defun verify (id password db &key (checker #'default-checker))
   (unless (funcall checker (db-get-password db id) password)
