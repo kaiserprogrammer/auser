@@ -10,7 +10,7 @@ NOTE: I do not mean the special variable *user-db*
 
 ```lisp
 (let ((*user-db* (make-instance 'memory-db)))
-  (add-user "blub" "secret")
-  (assert-true (verify-user "blub" "secret"))
-  (assert-false (verify-user "blub" "wrong")))
+  (add "blub" "secret")
+  (assert-true (verify "blub" "secret"))
+  (assert-false (verify "blub" "wrong")))
 ```

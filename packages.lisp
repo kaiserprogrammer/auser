@@ -1,10 +1,9 @@
 (defpackage :auser
   (:use :cl)
   (:export
-   :add-user
-   :verify-user
-   :update-password
-   :*user-db*
+   :add
+   :verify
+   :update
    :user-does-not-exist
    :user-already-exists
    :invalid-password
