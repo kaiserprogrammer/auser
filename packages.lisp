@@ -7,4 +7,5 @@
    :user-does-not-exist
    :user-already-exists
    :invalid-password
-   :empty-password))
+   :empty-password
+   :empty-password-hash))
