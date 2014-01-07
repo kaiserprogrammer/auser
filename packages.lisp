@@ -1,5 +1,5 @@
 (defpackage :auser
-  (:use :cl)
+  (:use :cl :apassword)
   (:export
    :add
    :verify
@@ -7,5 +7,6 @@
    :user-does-not-exist
    :user-already-exists
    :invalid-password
+   :invalid-hash
    :empty-password
-   :empty-password-hash))
+   :empty-hash))
